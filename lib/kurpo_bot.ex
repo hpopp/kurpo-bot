@@ -3,16 +3,11 @@ defmodule KurpoBot do
   Documentation for `KurpoBot`.
   """
 
-  @doc """
-  Hello world.
+  def bot_id() do
+    Application.get_env(:kurpo_bot, :bot_id)
+  end
 
-  ## Examples
-
-      iex> KurpoBot.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def user_id() do
+    Application.get_env(:kurpo_bot, :user_id)
   end
 end

@@ -1,7 +1,7 @@
 defmodule KurpoBot.MainConsumer do
   use Nostrum.Consumer
 
-  alias KurpoBot.MessageStore
+  alias KurpoBot.{MessageStore, Repo}
   alias Nostrum.Api
 
   def start_link do
@@ -19,9 +19,9 @@ defmodule KurpoBot.MainConsumer do
         {:ok, message} = MessageStore.get_random()
         Api.create_message(msg.channel_id, message)
 
-      "!find" ->
-        user_id = Application.get_env(:kurpo_bot, :user_id)
-        scrape_messages_by_user(msg.channel_id, user_id)
+      "!sync" ->
+        Api.create_message(msg.channel_id, "Syncing...")
+        scrape_messages_by_user(msg.channel_id, KurpoBot.user_id())
         :ignore
 
       _ ->
@@ -40,6 +40,7 @@ defmodule KurpoBot.MainConsumer do
       {:ok, messages} ->
         messages
         |> Enum.filter(fn msg -> msg.author.id == user_id end)
+        |> Enum.filter(fn msg -> !String.starts_with?(msg.content, "!") end)
         |> Enum.map(fn x ->
           %{
             channel_id: x.channel_id,
@@ -49,7 +50,11 @@ defmodule KurpoBot.MainConsumer do
             user_id: x.author.id
           }
         end)
-        |> MessageStore.put_messages()
+        |> Enum.each(fn attrs ->
+          %Repo.Message{}
+          |> Repo.Message.changeset(attrs)
+          |> Repo.insert()
+        end)
 
       {:error, _} ->
         :ignore

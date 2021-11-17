@@ -1,6 +1,4 @@
 defmodule KurpoBot.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
@@ -13,12 +11,16 @@ defmodule KurpoBot.Application do
       KurpoBot.MessageStore
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: KurpoBot.Supervisor]
     result = Supervisor.start_link(children, opts)
-    {:ok, bot_info} = Nostrum.Api.get_application_information()
-    Application.put_env(String.to_integer(bot_info.id))
+
+    initialize_bot_id()
+
     result
+  end
+
+  def initialize_bot_id do
+    {:ok, bot_info} = Nostrum.Api.get_application_information()
+    Application.put_env(:kurpo_bot, :bot_id, String.to_integer(bot_info.id))
   end
 end

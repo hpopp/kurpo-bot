@@ -5,10 +5,13 @@ defmodule KurpoBot.Repo.Message do
   @required ~w(
     channel_id
     content
-    guild_id
     message_id
     user_id
   )a
+
+  @params ~w(
+    guild_id
+  )a ++ @required
 
   schema "messages" do
     field :channel_id, :integer
@@ -20,7 +23,7 @@ defmodule KurpoBot.Repo.Message do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required)
+    |> cast(params, @params)
     |> validate_required(@required)
   end
 end
