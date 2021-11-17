@@ -12,8 +12,8 @@ defmodule KurpoBot.MainConsumer do
     IO.inspect(msg)
 
     case msg.content do
-      "ping!" ->
-        Api.create_message(msg.channel_id, "I copy and pasted this code")
+      "!ping" ->
+        Api.create_message(msg.channel_id, "Pong!")
 
       "!get" ->
         {:ok, message} = MessageStore.get_random()
