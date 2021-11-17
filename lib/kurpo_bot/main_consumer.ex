@@ -19,18 +19,9 @@ defmodule KurpoBot.MainConsumer do
         {:ok, message} = MessageStore.get_random()
         Api.create_message(msg.channel_id, message)
 
-      "!become " <> user ->
-        [username, discriminator] = String.split(user, "#")
-
-        messages =
-          Api.get_channel_messages(msg.channel_id, :infinity)
-          |> elem(1)
-          |> filter_by_user(username, discriminator)
-          |> Enum.map(& &1.content)
-          |> Enum.filter(fn s -> !String.starts_with?(s, "!") end)
-
-        MessageStore.put_messages(messages)
-
+      "!find" ->
+        user_id = Application.get_env(:kurpo_bot, :user_id)
+        scrape_messages_by_user(msg.channel_id, user_id)
         :ignore
 
       _ ->
@@ -44,10 +35,24 @@ defmodule KurpoBot.MainConsumer do
     :noop
   end
 
-  def filter_by_user(messages, username, discriminator) do
-    Enum.filter(
-      messages,
-      &(&1.author.username == username && &1.author.discriminator == discriminator)
-    )
+  def scrape_messages_by_user(channel_id, user_id) do
+    case Api.get_channel_messages(channel_id, :infinity) do
+      {:ok, messages} ->
+        messages
+        |> Enum.filter(fn msg -> msg.author.id == user_id end)
+        |> Enum.map(fn x ->
+          %{
+            channel_id: x.channel_id,
+            content: x.content,
+            guild_id: x.guild_id,
+            message_id: x.id,
+            user_id: x.author.id
+          }
+        end)
+        |> MessageStore.put_messages()
+
+      {:error, _} ->
+        :ignore
+    end
   end
 end
