@@ -25,5 +25,6 @@ defmodule KurpoBot.Repo.Message do
     model
     |> cast(params, @params)
     |> validate_required(@required)
+    |> unique_constraint(:message_id)
   end
 end

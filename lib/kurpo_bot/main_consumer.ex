@@ -2,7 +2,7 @@ defmodule KurpoBot.MainConsumer do
   use Nostrum.Consumer
 
   alias KurpoBot.Handler.Stats
-  alias KurpoBot.{MessageService, Repo}
+  alias KurpoBot.{MessageService, Repo, Scraper}
   alias Nostrum.Api
 
   require Logger
@@ -23,9 +23,11 @@ defmodule KurpoBot.MainConsumer do
 
       "!sync" ->
         if admin?(msg.author.id) do
-          Api.create_message(msg.channel_id, "Starting sync...")
-          scrape_messages_by_user(msg.channel_id, KurpoBot.user_id())
-          Api.create_message(msg.channel_id, "Completed sync...")
+          Task.async(fn ->
+            Api.create_message(msg.channel_id, "Starting sync...")
+            Scraper.sync_messages(msg.channel_id, KurpoBot.user_id())
+            Api.create_message(msg.channel_id, "Completed sync...")
+          end)
         end
 
         :ignore
@@ -64,33 +66,6 @@ defmodule KurpoBot.MainConsumer do
     Api.start_typing(channel_id)
     5_000 |> :rand.uniform() |> Process.sleep()
     Api.create_message(channel_id, content)
-  end
-
-  def scrape_messages_by_user(channel_id, user_id) do
-    case Api.get_channel_messages(channel_id, :infinity) do
-      {:ok, messages} ->
-        messages
-        |> Enum.filter(fn msg -> msg.author.id == user_id end)
-        |> Enum.filter(fn msg -> !String.starts_with?(msg.content, "!") end)
-        |> Enum.map(fn x ->
-          %{
-            channel_id: x.channel_id,
-            content: x.content,
-            guild_id: x.guild_id,
-            message_id: x.id,
-            user_id: x.author.id
-          }
-        end)
-        |> Enum.each(fn attrs ->
-          %Repo.Message{}
-          |> Repo.Message.changeset(attrs)
-          |> Repo.insert()
-        end)
-
-      {:error, error} ->
-        error |> inspect() |> Logger.error()
-        :ignore
-    end
   end
 
   def admin?(user_id) do
