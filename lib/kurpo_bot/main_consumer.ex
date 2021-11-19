@@ -1,7 +1,8 @@
 defmodule KurpoBot.MainConsumer do
   use Nostrum.Consumer
 
-  alias KurpoBot.{MessageStore, Repo}
+  alias KurpoBot.Repo
+  alias KurpoBot.Repo.Message
   alias Nostrum.Api
 
   def start_link do
@@ -16,8 +17,8 @@ defmodule KurpoBot.MainConsumer do
         Api.create_message(msg.channel_id, "Pong!")
 
       "!get" ->
-        {:ok, message} = MessageStore.get_random()
-        Api.create_message(msg.channel_id, message)
+        message = Repo.get_random(Message)
+        Api.create_message(msg.channel_id, message.content)
 
       "!sync" ->
         Api.create_message(msg.channel_id, "Syncing...")
