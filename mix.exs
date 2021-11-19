@@ -1,15 +1,18 @@
 defmodule KurpoBot.MixProject do
   use Mix.Project
 
+  @version String.trim(File.read!("VERSION"))
+
   def project do
     [
       app: :kurpo_bot,
-      version: "0.1.0",
+      deps: deps(),
       elixir: "~> 1.10",
-      elixirc_paths: elixirc_paths(Mix.env()),
       elixirc_options: [warnings_as_errors: true],
+      elixirc_paths: elixirc_paths(Mix.env()),
+      releases: releases(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      version: @version
     ]
   end
 
@@ -31,6 +34,18 @@ defmodule KurpoBot.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:nostrum, "~> 0.4"},
       {:postgrex, ">= 0.0.0"}
+    ]
+  end
+
+  defp releases do
+    [
+      codedge: [
+        applications: [
+          runtime_tools: :permanent
+        ],
+        include_executables_for: [:unix],
+        path: "dist"
+      ]
     ]
   end
 end

@@ -24,11 +24,12 @@ git clone https://github.com/hpopp/kurpo-bot && cd kurpo-bot
 mix deps.get
 ```
 
-3. Set your bot token and user ID.
+3. Set your bot token, user ID, and admin user IDs.
 
 ```shell
-export KURPO_TOKEN="yourtokengoeshere"
-export KURPO_ID="useridgoeshere"
+export KURPO_ADMIN_IDS="userid1,userid2"
+export KURPO_TOKEN="token"
+export KURPO_ID="userid"
 ```
 
 4. Run your database migrations.

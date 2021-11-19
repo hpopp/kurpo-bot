@@ -1,28 +1,33 @@
 defmodule KurpoBot.MainConsumer do
   use Nostrum.Consumer
 
-  alias KurpoBot.Repo
-  alias KurpoBot.Repo.Message
+  alias KurpoBot.Handler.Stats
+  alias KurpoBot.{MessageService, Repo}
   alias Nostrum.Api
+
+  require Logger
 
   def start_link do
     Consumer.start_link(__MODULE__)
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
-    IO.inspect(msg)
+    msg |> inspect(pretty: true) |> Logger.debug()
 
     case msg.content do
-      "!ping" ->
-        Api.create_message(msg.channel_id, "Pong!")
+      "!info" ->
+        Stats.handle_project_info(msg.channel_id)
 
-      "!get" ->
-        message = Repo.get_random(Message)
-        Api.create_message(msg.channel_id, message.content)
+      "!statsu" ->
+        Stats.handle_sysinfo(msg.channel_id)
 
       "!sync" ->
-        Api.create_message(msg.channel_id, "Syncing...")
-        scrape_messages_by_user(msg.channel_id, KurpoBot.user_id())
+        if admin?(msg.author.id) do
+          Api.create_message(msg.channel_id, "Starting sync...")
+          scrape_messages_by_user(msg.channel_id, KurpoBot.user_id())
+          Api.create_message(msg.channel_id, "Completed sync...")
+        end
+
         :ignore
 
       "!" <> _other ->
@@ -32,18 +37,19 @@ defmodule KurpoBot.MainConsumer do
       _ ->
         cond do
           reply?(msg, KurpoBot.bot_id()) ->
-            message = Repo.get_random(Message)
-            Api.create_message(msg.channel_id, message.content)
+            message = MessageService.get_random(KurpoBot.user_id())
+            type_and_send(msg.channel_id, message.content)
 
           mentions?(msg, KurpoBot.bot_id()) ->
-            message = Repo.get_random(Message)
-            Api.create_message(msg.channel_id, message.content)
+            message = MessageService.get_random(KurpoBot.user_id())
+            type_and_send(msg.channel_id, message.content)
 
           msg.author.id == KurpoBot.user_id() ->
             save_message(msg)
-        end
 
-        :ignore
+          true ->
+            :ignore
+        end
     end
   end
 
@@ -51,6 +57,13 @@ defmodule KurpoBot.MainConsumer do
   # you don't have a method definition for each event type.
   def handle_event(_event) do
     :noop
+  end
+
+  def type_and_send(channel_id, content) do
+    5_000 |> :rand.uniform() |> Process.sleep()
+    Api.start_typing(channel_id)
+    5_000 |> :rand.uniform() |> Process.sleep()
+    Api.create_message(channel_id, content)
   end
 
   def scrape_messages_by_user(channel_id, user_id) do
@@ -74,9 +87,14 @@ defmodule KurpoBot.MainConsumer do
           |> Repo.insert()
         end)
 
-      {:error, _} ->
+      {:error, error} ->
+        error |> inspect() |> Logger.error()
         :ignore
     end
+  end
+
+  def admin?(user_id) do
+    user_id in KurpoBot.admin_ids()
   end
 
   def mentions?(message, user_id) do

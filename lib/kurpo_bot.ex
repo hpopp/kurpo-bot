@@ -3,11 +3,15 @@ defmodule KurpoBot do
   Documentation for `KurpoBot`.
   """
 
-  def bot_id() do
+  def admin_ids do
+    Application.get_env(:kurpo_bot, :admin_ids, [])
+  end
+
+  def bot_id do
     Application.get_env(:kurpo_bot, :bot_id)
   end
 
-  def user_id() do
+  def user_id do
     Application.get_env(:kurpo_bot, :user_id)
   end
 end

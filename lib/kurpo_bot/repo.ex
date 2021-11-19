@@ -11,4 +11,10 @@ defmodule KurpoBot.Repo do
     |> limit(1)
     |> one()
   end
+
+  def total(query) do
+    query
+    |> select([m], count(m.id))
+    |> one()
+  end
 end
