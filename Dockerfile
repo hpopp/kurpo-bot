@@ -16,7 +16,7 @@ COPY rel rel
 COPY lib lib
 RUN mix do deps.get, deps.compile
 
-RUN mix release codedge
+RUN mix release kurpo_bot
 
 FROM alpine:3.14
 

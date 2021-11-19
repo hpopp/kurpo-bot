@@ -1,0 +1,5 @@
+#!/bin/sh
+
+docker build \
+  --build-arg VERSION=$(cat VERSION) \
+  -t hpopp/kurpo-bot:$(cat VERSION) .

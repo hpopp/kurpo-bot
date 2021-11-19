@@ -39,7 +39,7 @@ defmodule KurpoBot.MixProject do
 
   defp releases do
     [
-      codedge: [
+      kurpo_bot: [
         applications: [
           runtime_tools: :permanent
         ],
