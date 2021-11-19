@@ -25,7 +25,24 @@ defmodule KurpoBot.MainConsumer do
         scrape_messages_by_user(msg.channel_id, KurpoBot.user_id())
         :ignore
 
+      "!" <> _other ->
+        # Ignore other commands
+        :ignore
+
       _ ->
+        cond do
+          reply?(msg, KurpoBot.bot_id()) ->
+            message = Repo.get_random(Message)
+            Api.create_message(msg.channel_id, message.content)
+
+          mentions?(msg, KurpoBot.bot_id()) ->
+            message = Repo.get_random(Message)
+            Api.create_message(msg.channel_id, message.content)
+
+          msg.author.id == KurpoBot.user_id() ->
+            save_message(msg)
+        end
+
         :ignore
     end
   end
@@ -60,5 +77,31 @@ defmodule KurpoBot.MainConsumer do
       {:error, _} ->
         :ignore
     end
+  end
+
+  def mentions?(message, user_id) do
+    Enum.any?(message.mentions, fn m -> m.id == user_id end)
+  end
+
+  def reply?(%{referenced_message: nil}, _user_id) do
+    false
+  end
+
+  def reply?(%{referenced_message: m}, user_id) do
+    m.author.id == user_id
+  end
+
+  def save_message(message) do
+    attrs = %{
+      channel_id: message.channel_id,
+      content: message.content,
+      guild_id: message.guild_id,
+      message_id: message.id,
+      user_id: message.author.id
+    }
+
+    %Repo.Message{}
+    |> Repo.Message.changeset(attrs)
+    |> Repo.insert()
   end
 end
