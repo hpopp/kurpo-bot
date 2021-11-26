@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `@kurpobot storytime` for a list of five messages randomly selected.
+- `@KurpoBot storytime` for a list of five messages randomly selected.
 
 ### Changed
 
