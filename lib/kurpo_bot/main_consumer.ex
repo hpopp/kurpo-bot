@@ -38,6 +38,12 @@ defmodule KurpoBot.MainConsumer do
 
       _ ->
         cond do
+          mentions?(msg, KurpoBot.bot_id()) && String.contains?(msg.content, "storytime") ->
+            for _ <- 1..5 do
+              message = MessageService.get_random(KurpoBot.user_id())
+              type_and_send(msg.channel_id, message.content)
+            end
+
           reply?(msg, KurpoBot.bot_id()) ->
             message = MessageService.get_random(KurpoBot.user_id())
             type_and_send(msg.channel_id, message.content)
@@ -62,9 +68,11 @@ defmodule KurpoBot.MainConsumer do
   end
 
   def type_and_send(channel_id, content) do
-    5_000 |> :rand.uniform() |> Process.sleep()
+    3_000 |> :rand.uniform() |> Process.sleep()
     Api.start_typing(channel_id)
-    5_000 |> :rand.uniform() |> Process.sleep()
+
+    t = round(String.length(content) / 6)
+    Process.sleep(t * 1000)
     Api.create_message(channel_id, content)
   end
 

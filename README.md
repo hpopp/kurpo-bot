@@ -1,3 +1,5 @@
+[![version](https://img.shields.io/badge/version-0.2.0-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+
 # KurpoBot
 
 This bot is terrible.
