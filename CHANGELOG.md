@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated dependencies.
 - Updated author Discord handle.
+- `POD_IP` environment variable now defaults to `127.0.0.1` when not specified.
 
 ## [0.2.0] - 2021-11-26
 
