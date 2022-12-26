@@ -1,4 +1,4 @@
-FROM codedgellc/alpine-elixir-phoenix:1.12 as builder
+FROM codedgellc/alpine-elixir-phoenix:1.14 as builder
 
 WORKDIR /kurpo-bot
 
@@ -18,9 +18,9 @@ RUN mix do deps.get, deps.compile
 
 RUN mix release kurpo_bot
 
-FROM alpine:3.14
+FROM alpine:3
 
-RUN apk add --update --no-cache bash git libstdc++ ncurses-libs openssl
+RUN apk add --update --no-cache bash git libstdc++ ncurses-libs openssl1.1-compat
 
 WORKDIR /app
 

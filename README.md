@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/version-0.2.0-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+[![version](https://img.shields.io/badge/version-0.2.1-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
 
@@ -8,8 +8,8 @@ This bot is terrible.
 
 This project requires these dependencies to be installed and running:
 
-- Elixir 1.12.x
-- Erlang 23.x
+- Elixir 1.14.x
+- Erlang 25.x
 - Postgres 14.x
 
 ## Getting Started
@@ -60,3 +60,16 @@ run it after a save. Be sure it respects this project's `.formatter.exs`.
 ### Commits
 
 Git commit subjects use the [Karma style](http://karma-runner.github.io/5.0/dev/git-commit-msg.html).
+
+## Deployment
+
+Deployments require the following environment variables to be set in containers:
+
+| Key               | Description                        | Required? | Default     |
+| ----------------- | ---------------------------------- | --------- | ----------- |
+| `DATABASE_URL`    | Database URL.                      | x         |             |
+| `KURPO_ADMIN_IDS` | Administrator Discord user IDs.    |           | `1234`      |
+| `KURPO_ID`        | Discord user ID to watch.          | x         |             |
+| `KURPO_TOKEN`     | Discord bot token.                 | x         |             |
+| `LOG_LEVEL`       | Logger level.                      |           | `error`     |
+| `POD_IP`          | Host for Elixir release node name. |           | `127.0.0.1` |

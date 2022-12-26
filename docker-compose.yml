@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  app:
+    image: kurpo-bot:latest
+    build: .
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@postgres/kurpo_bot?pool_size=5
+      KURPO_TOKEN: TODO_SET_ME
+      KURPO_ID: TODO_SET_ME
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: "kurpo_bot"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"

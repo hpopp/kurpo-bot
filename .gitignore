@@ -24,3 +24,10 @@ kurpo_bot-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Ignore direnv
+.envrc
+
+# Various
+.DS_Store
+*.swp
