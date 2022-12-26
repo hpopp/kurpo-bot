@@ -50,7 +50,6 @@ defmodule KurpoBot.MainConsumer do
 
           mentions?(msg, KurpoBot.bot_id()) ->
             message = MessageService.get_random(KurpoBot.user_id())
-            message |> inspect(pretty: true) |> Logger.debug()
             type_and_send(msg.channel_id, message.content)
 
           msg.author.id == KurpoBot.user_id() ->
