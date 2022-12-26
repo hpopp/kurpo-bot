@@ -65,10 +65,11 @@ Git commit subjects use the [Karma style](http://karma-runner.github.io/5.0/dev/
 
 Deployments require the following environment variables to be set in containers:
 
-| Key               | Description                     | Required? | Default |
-| ----------------- | ------------------------------- | --------- | ------- |
-| `DATABASE_URL`    | Database URL.                   | x         |         |
-| `KURPO_ADMIN_IDS` | Administrator Discord user IDs. |           | `1234`  |
-| `KURPO_ID`        | Discord user ID to watch.       | x         |         |
-| `KURPO_TOKEN`     | Discord bot token.              | x         |         |
-| `LOG_LEVEL`       | Logger level.                   |           | `error` |
+| Key               | Description                        | Required? | Default     |
+| ----------------- | ---------------------------------- | --------- | ----------- |
+| `DATABASE_URL`    | Database URL.                      | x         |             |
+| `KURPO_ADMIN_IDS` | Administrator Discord user IDs.    |           | `1234`      |
+| `KURPO_ID`        | Discord user ID to watch.          | x         |             |
+| `KURPO_TOKEN`     | Discord bot token.                 | x         |             |
+| `LOG_LEVEL`       | Logger level.                      |           | `error`     |
+| `POD_IP`          | Host for Elixir release node name. |           | `127.0.0.1` |
