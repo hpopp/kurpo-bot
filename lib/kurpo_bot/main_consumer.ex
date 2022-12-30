@@ -92,7 +92,11 @@ defmodule KurpoBot.MainConsumer do
     false
   end
 
-  def reply?(%{referenced_message: m}, user_ids) do
+  def reply?(%{referenced_message: m}, user_id) when is_integer(user_id) do
+    m.author.id == user_id
+  end
+
+  def reply?(%{referenced_message: m}, user_ids) when is_list(user_ids) do
     m.author.id in user_ids
   end
 
