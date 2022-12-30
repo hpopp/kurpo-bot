@@ -25,7 +25,7 @@ defmodule KurpoBot.MainConsumer do
         if admin?(msg.author.id) do
           Task.async(fn ->
             Api.create_message(msg.channel_id, "Starting sync...")
-            Scraper.sync_messages(msg.channel_id, KurpoBot.user_id())
+            Scraper.sync_messages(msg.channel_id, KurpoBot.user_ids())
             Api.create_message(msg.channel_id, "Completed sync...")
           end)
         end
@@ -40,19 +40,19 @@ defmodule KurpoBot.MainConsumer do
         cond do
           mentions?(msg, KurpoBot.bot_id()) && String.contains?(msg.content, "storytime") ->
             for _ <- 1..5 do
-              message = MessageService.get_random(KurpoBot.user_id())
+              message = MessageService.get_random(KurpoBot.user_ids())
               type_and_send(msg.channel_id, message.content)
             end
 
           reply?(msg, KurpoBot.bot_id()) ->
-            message = MessageService.get_random(KurpoBot.user_id())
+            message = MessageService.get_random(KurpoBot.user_ids())
             type_and_send(msg.channel_id, message.content)
 
           mentions?(msg, KurpoBot.bot_id()) ->
-            message = MessageService.get_random(KurpoBot.user_id())
+            message = MessageService.get_random(KurpoBot.user_ids())
             type_and_send(msg.channel_id, message.content)
 
-          msg.author.id == KurpoBot.user_id() ->
+          msg.author.id in KurpoBot.user_ids() ->
             save_message(msg)
 
           true ->
@@ -80,16 +80,20 @@ defmodule KurpoBot.MainConsumer do
     user_id in KurpoBot.admin_ids()
   end
 
-  def mentions?(message, user_id) do
+  def mentions?(message, user_id) when is_integer(user_id) do
     Enum.any?(message.mentions, fn m -> m.id == user_id end)
   end
 
-  def reply?(%{referenced_message: nil}, _user_id) do
+  def mentions?(message, user_ids) when is_list(user_ids) do
+    Enum.any?(message.mentions, fn m -> m.id in user_ids end)
+  end
+
+  def reply?(%{referenced_message: nil}, _user_ids) do
     false
   end
 
-  def reply?(%{referenced_message: m}, user_id) do
-    m.author.id == user_id
+  def reply?(%{referenced_message: m}, user_ids) do
+    m.author.id in user_ids
   end
 
   def save_message(message) do
