@@ -12,7 +12,7 @@ defmodule KurpoBot.MainConsumer do
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
-    # msg |> inspect(pretty: true) |> Logger.debug()
+    msg |> inspect(pretty: true) |> Logger.debug()
 
     case msg.content do
       "!info" ->
