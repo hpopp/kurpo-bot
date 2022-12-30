@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/version-0.2.1-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+[![version](https://img.shields.io/badge/version-0.3.0-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
 
@@ -31,7 +31,7 @@ mix deps.get
 ```shell
 export KURPO_ADMIN_IDS="userid1,userid2"
 export KURPO_TOKEN="token"
-export KURPO_ID="userid"
+export KURPO_IDS="userid1,userid2"
 ```
 
 4. Run your database migrations.
@@ -69,7 +69,7 @@ Deployments require the following environment variables to be set in containers:
 | ----------------- | ---------------------------------- | --------- | ----------- |
 | `DATABASE_URL`    | Database URL.                      | x         |             |
 | `KURPO_ADMIN_IDS` | Administrator Discord user IDs.    |           | `1234`      |
-| `KURPO_ID`        | Discord user ID to watch.          | x         |             |
+| `KURPO_IDS`       | Discord user IDs to watch.         | x         |             |
 | `KURPO_TOKEN`     | Discord bot token.                 | x         |             |
 | `LOG_LEVEL`       | Logger level.                      |           | `error`     |
 | `POD_IP`          | Host for Elixir release node name. |           | `127.0.0.1` |
