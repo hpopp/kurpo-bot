@@ -73,3 +73,9 @@ Deployments require the following environment variables to be set in containers:
 | `KURPO_TOKEN`     | Discord bot token.                 | x         |             |
 | `LOG_LEVEL`       | Logger level.                      |           | `error`     |
 | `POD_IP`          | Host for Elixir release node name. |           | `127.0.0.1` |
+
+## License
+
+Copyright (c) 2021-2023 Henry Popp
+
+This library is MIT licensed. See the [LICENSE](https://github.com/hpopp/kurpo-bot/blob/master/LICENSE) for details.
