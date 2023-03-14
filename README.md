@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/version-0.3.1-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+[![version](https://img.shields.io/badge/version-0.3.2-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
 
