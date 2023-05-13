@@ -11,6 +11,15 @@ defmodule KurpoBot.MessageService do
     |> Repo.one()
   end
 
+  def get_random_with_ping(user_ids) do
+    Message
+    |> where([m], m.user_id in ^user_ids)
+    |> where([m], ilike(m.content, ^"%\@%"))
+    |> order_by(fragment("RANDOM()"))
+    |> limit(1)
+    |> Repo.one()
+  end
+
   def total(user_ids) do
     Message
     |> where([m], m.user_id in ^user_ids)

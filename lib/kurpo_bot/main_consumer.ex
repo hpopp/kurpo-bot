@@ -37,27 +37,7 @@ defmodule KurpoBot.MainConsumer do
         :ignore
 
       _ ->
-        cond do
-          mentions?(msg, KurpoBot.bot_id()) && String.contains?(msg.content, "storytime") ->
-            for _ <- 1..5 do
-              message = MessageService.get_random(KurpoBot.user_ids())
-              type_and_send(msg.channel_id, message.content)
-            end
-
-          reply?(msg, KurpoBot.bot_id()) ->
-            message = MessageService.get_random(KurpoBot.user_ids())
-            type_and_send(msg.channel_id, message.content)
-
-          mentions?(msg, KurpoBot.bot_id()) ->
-            message = MessageService.get_random(KurpoBot.user_ids())
-            type_and_send(msg.channel_id, message.content)
-
-          msg.author.id in KurpoBot.user_ids() ->
-            save_message(msg)
-
-          true ->
-            :ignore
-        end
+        default_handler(msg)
     end
   end
 
@@ -65,6 +45,35 @@ defmodule KurpoBot.MainConsumer do
   # you don't have a method definition for each event type.
   def handle_event(_event) do
     :noop
+  end
+
+  def default_handler(msg) do
+    cond do
+      mentions?(msg, KurpoBot.bot_id()) && storytime?(msg) ->
+        for _ <- 1..5 do
+          do_random_reply(msg)
+        end
+
+      reply?(msg, KurpoBot.bot_id()) || mentions?(msg, KurpoBot.bot_id()) ->
+        do_random_reply(msg)
+
+      msg.author.id in KurpoBot.user_ids() ->
+        save_message(msg)
+
+      true ->
+        :ignore
+    end
+  end
+
+  def do_random_reply(msg) do
+    message =
+      if ping?(msg) do
+        MessageService.get_random_with_ping(KurpoBot.user_ids())
+      else
+        MessageService.get_random(KurpoBot.user_ids())
+      end
+
+    type_and_send(msg.channel_id, message.content)
   end
 
   def type_and_send(channel_id, content) do
@@ -112,5 +121,13 @@ defmodule KurpoBot.MainConsumer do
     %Repo.Message{}
     |> Repo.Message.changeset(attrs)
     |> Repo.insert()
+  end
+
+  defp storytime?(msg) do
+    String.contains?(msg.content, "storytime")
+  end
+
+  defp ping?(msg) do
+    String.contains?(msg.content, "ping")
   end
 end
