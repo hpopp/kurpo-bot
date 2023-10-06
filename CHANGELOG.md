@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2023-10-06
+
+### Added
+
+- OpenTelemetry to export telemetry.
+
+### Changed
+
+- Upgraded dependencies: ecto_sql 3.10.3, postgrex 0.17.3, ssl_verify_fun: 1.1.7
+
 ## [0.4.0] - 2023-05-13
 
 ### Added

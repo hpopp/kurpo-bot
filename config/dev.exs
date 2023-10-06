@@ -22,3 +22,5 @@ config :kurpo_bot, KurpoBot.Repo,
 config :nostrum,
   token: System.get_env("KURPO_TOKEN"),
   num_shards: :auto
+
+config :opentelemetry, traces_exporter: {:otel_exporter_stdout, []}

@@ -33,7 +33,17 @@ defmodule KurpoBot.MixProject do
     [
       {:ecto_sql, "~> 3.0"},
       {:nostrum, "~> 0.4"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+
+      # Open Telemetry
+      {:opentelemetry, "~> 1.0"},
+      {:opentelemetry_api, "~> 1.0"},
+      {:opentelemetry_exporter, "~> 1.0"},
+      {:opentelemetry_ecto, "~> 1.0"},
+
+      # ssl_verify_fun 1.1.6 was having issues
+      # manually specified to use latest version
+      {:ssl_verify_fun, "~> 1.1"}
     ]
   end
 
@@ -41,6 +51,8 @@ defmodule KurpoBot.MixProject do
     [
       kurpo_bot: [
         applications: [
+          opentelemetry_exporter: :permanent,
+          opentelemetry: :temporary,
           runtime_tools: :permanent
         ],
         include_executables_for: [:unix],
