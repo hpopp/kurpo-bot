@@ -16,4 +16,6 @@ config :nostrum,
     :message_content
   ]
 
+config :opentelemetry, traces_exporter: :none
+
 import_config "#{Mix.env()}.exs"

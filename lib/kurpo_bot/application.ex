@@ -13,6 +13,8 @@ defmodule KurpoBot.Application do
       ]
       |> Enum.filter(&(not is_nil(&1)))
 
+    OpentelemetryEcto.setup([:kurpo_bot, :repo])
+
     opts = [strategy: :one_for_one, name: KurpoBot.Supervisor]
     result = Supervisor.start_link(children, opts)
 
