@@ -32,7 +32,8 @@ defmodule KurpoBot.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.0"},
-      {:nostrum, "~> 0.4"},
+      # {:nostrum, "~> 0.4"},
+      {:nostrum, github: "Kraigie/nostrum", branch: "master"},
       {:postgrex, ">= 0.0.0"},
 
       # Open Telemetry
