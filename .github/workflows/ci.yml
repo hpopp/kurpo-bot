@@ -86,9 +86,9 @@ jobs:
           path: /tmp
       - name: List artifacts
         run: |
-          ls /tmp
+          ls -lash /tmp
       - name: Run Trivy vulnerability scanner in tarball mode
         uses: aquasecurity/trivy-action@master
         with:
-          input: /github/workspace/tmp/image.tar
+          input: /tmp/image.tar
           severity: "CRITICAL"
