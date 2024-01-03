@@ -1,3 +1,4 @@
+![status](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml/badge.svg)
 [![version](https://img.shields.io/badge/version-0.5.1-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
@@ -76,6 +77,6 @@ Deployments require the following environment variables to be set in containers:
 
 ## License
 
-Copyright (c) 2021-2023 Henry Popp
+Copyright (c) 2021-2024 Henry Popp
 
 This library is MIT licensed. See the [LICENSE](https://github.com/hpopp/kurpo-bot/blob/master/LICENSE) for details.
