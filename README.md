@@ -76,6 +76,6 @@ Deployments require the following environment variables to be set in containers:
 
 ## License
 
-Copyright (c) 2021-2023 Henry Popp
+Copyright (c) 2021-2024 Henry Popp
 
 This library is MIT licensed. See the [LICENSE](https://github.com/hpopp/kurpo-bot/blob/master/LICENSE) for details.
