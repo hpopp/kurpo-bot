@@ -90,5 +90,5 @@ jobs:
       - name: Run Trivy vulnerability scanner in tarball mode
         uses: aquasecurity/trivy-action@master
         with:
-          input: /tmp/image.tar
+          input: /github/workspace/tmp/image.tar
           severity: "CRITICAL"
