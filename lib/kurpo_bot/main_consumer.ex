@@ -120,10 +120,14 @@ defmodule KurpoBot.MainConsumer do
   end
 
   defp storytime?(msg) do
-    String.contains?(msg.content, "storytime")
+    msg.content
+    |> String.downcase()
+    |> String.contains?("storytime")
   end
 
   defp ping?(msg) do
-    String.contains?(msg.content, "ping")
+    msg.content
+    |> String.downcase()
+    |> String.contains?("ping")
   end
 end
