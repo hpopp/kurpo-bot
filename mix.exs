@@ -7,6 +7,7 @@ defmodule KurpoBot.MixProject do
     [
       app: :kurpo_bot,
       deps: deps(),
+      dialyzer: dialyzer(),
       elixir: "~> 1.10",
       elixirc_options: [warnings_as_errors: true],
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -31,6 +32,7 @@ defmodule KurpoBot.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:nostrum, github: "Kraigie/nostrum", branch: "master"},
       {:opentelemetry, "~> 1.0"},
@@ -53,6 +55,12 @@ defmodule KurpoBot.MixProject do
         include_executables_for: [:unix],
         path: "dist"
       ]
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 end
