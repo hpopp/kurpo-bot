@@ -28,6 +28,10 @@ kurpo_bot-*.tar
 # Ignore direnv
 .envrc
 
+# Ignore dialyzer files
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
+
 # Various
 .DS_Store
 *.swp

@@ -18,7 +18,7 @@ defmodule KurpoBot.Handler.Stats do
     info = [
       {"Version", version},
       {"Library", "[KurpoBot](https://github.com/hpopp/kurpo-bot)"},
-      {"Author", "storm.drain\#0001"},
+      {"Author", "storm.drain"},
       {"Uptime", uptime() || "--"},
       {"Total Messages", "#{messages}"},
       {"Memory Usage", "#{memory} MB"}
