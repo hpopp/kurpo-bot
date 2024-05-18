@@ -17,7 +17,7 @@ defmodule KurpoBot.Scraper do
   Fetches and saves all messages on a channel authored by
   specific users.
 
-  This iterates in pages of #{@limit}" until all messages are scraped.
+  This iterates in pages of #{@limit} until all messages are scraped.
   Ratelimiting is handled internally by Nostrum.
   """
   @spec sync_messages(non_neg_integer, [non_neg_integer]) :: :ok
