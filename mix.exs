@@ -34,6 +34,7 @@ defmodule KurpoBot.MixProject do
     [
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.0"},
+      {:ex_doc, ">= 0.0.0", only: [:dev]},
       {:nostrum, "~> 0.9"},
       {:opentelemetry, "~> 1.0"},
       {:opentelemetry_api, "~> 1.0"},

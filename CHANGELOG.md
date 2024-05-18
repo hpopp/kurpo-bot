@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.5] - 2024-05-18
 
+### Added
+
+- Updated various documentation and typespecs.
+
 ### Changed
 
 - Updated dependencies.
+
+### Removed
+
+- Removed unused `KurpoBot.MessageStore`.
 
 ## [0.5.4] - 2024-01-09
 
