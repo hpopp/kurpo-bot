@@ -1,5 +1,5 @@
 ![status](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml/badge.svg)
-[![version](https://img.shields.io/badge/version-0.5.4-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+[![version](https://img.shields.io/badge/version-0.5.5-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
 
@@ -9,8 +9,8 @@ This bot is terrible.
 
 This project requires these dependencies to be installed and running:
 
-- Elixir 1.14.x
-- Erlang 25.x
+- Elixir 1.16.x
+- Erlang 26.x
 - Postgres 14.x
 
 ## Getting Started
@@ -51,7 +51,7 @@ iex -S mix
 
 ### Testing
 
-Unit tests can be run with `mix test` or `mix coveralls.html`.
+Unit tests can be run with `mix test`.
 
 ### Formatting
 

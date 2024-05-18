@@ -1,4 +1,12 @@
 defmodule KurpoBot.MainConsumer do
+  @moduledoc """
+  Primary Discord handler for incoming messages.
+
+  This consumer does not run as a global singleton. If multiple replicas
+  of the application are run, each will process the incoming message,
+  resulting in multiple response messages by the bot.
+  """
+
   use Nostrum.Consumer
 
   alias KurpoBot.Handler.Stats

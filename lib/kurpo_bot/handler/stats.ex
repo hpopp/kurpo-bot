@@ -1,4 +1,8 @@
 defmodule KurpoBot.Handler.Stats do
+  @moduledoc """
+  Formats response messages for project info and system stats.
+  """
+
   alias Nostrum.Api
   alias Nostrum.Struct.Embed
   alias KurpoBot.Repo
