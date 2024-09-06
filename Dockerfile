@@ -1,4 +1,4 @@
-FROM elixir:1.16-alpine as builder
+FROM elixir:1.17-alpine as builder
 
 WORKDIR /kurpo-bot
 
