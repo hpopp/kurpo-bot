@@ -1,7 +1,7 @@
 import Config
 
 if config_env() == :prod do
-  config :logger, level: String.to_atom(System.get_env("LOG_LEVEL", "error"))
+  config :logger, level: String.to_atom(System.get_env("LOG_LEVEL", "info"))
 
   config :kurpo_bot,
     admin_ids:
@@ -17,6 +17,30 @@ if config_env() == :prod do
       |> Enum.uniq()
 
   config :kurpo_bot, KurpoBot.Repo, url: System.fetch_env!("DATABASE_URL")
+
+  case System.get_env("DATABASE_CACERTFILE") do
+    nil ->
+      :ok
+
+    cacertfile ->
+      db_hostname = System.get_env("DATABASE_HOSTNAME")
+
+      config :kurpo_bot, KurpoBot.Repo,
+        ssl: [
+          cacertfile: cacertfile,
+          certfile: System.get_env("DATABASE_CERTFILE"),
+          customize_hostname_check: [
+            match_fun: fn _ip, {_, dns_name} ->
+              dns_name == to_charlist(db_hostname)
+            end
+          ],
+          keyfile: System.get_env("DATABASE_KEYFILE"),
+          verify: :verify_peer,
+          verify_fun:
+            {&:ssl_verify_hostname.verify_fun/3, [check_hostname: to_charlist(db_hostname)]},
+          versions: [:"tlsv1.2"]
+        ]
+  end
 
   config :nostrum,
     token: System.fetch_env!("KURPO_TOKEN"),
