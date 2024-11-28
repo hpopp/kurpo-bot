@@ -16,6 +16,20 @@ config :nostrum,
     :message_content
   ]
 
+# Configures Elixir's Logger
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [
+    :author_id,
+    :channel_id,
+    :function,
+    :guild_id,
+    :line,
+    :module,
+    :span_id,
+    :trace_id
+  ]
+
 config :opentelemetry, traces_exporter: :none
 
 import_config "#{Mix.env()}.exs"

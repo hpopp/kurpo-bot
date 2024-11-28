@@ -1,5 +1,5 @@
 ![status](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml/badge.svg)
-[![version](https://img.shields.io/badge/version-0.6.0-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
+[![version](https://img.shields.io/badge/version-0.6.1-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/master)
 
 # KurpoBot
 
@@ -73,6 +73,7 @@ Deployments require the following environment variables to be set in containers:
 | `DATABASE_HOSTNAME`   | Database hostname for SSL certificate verification.          |           |             |
 | `DATABASE_KEYFILE`    | Path to database client key file for SSL connection.         |           |             |
 | `DATABASE_URL`        | Database URL.                                                | x         |             |
+| `GCP_PROJECT_ID`      | GCP project identifier. Enables GCP formatted logging.       |           |             |
 | `KURPO_ADMIN_IDS`     | Administrator Discord user IDs.                              |           | `1234`      |
 | `KURPO_IDS`           | Discord user IDs to watch.                                   | x         |             |
 | `KURPO_TOKEN`         | Discord bot token.                                           | x         |             |

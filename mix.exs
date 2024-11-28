@@ -36,6 +36,7 @@ defmodule KurpoBot.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev]},
       {:nostrum, "~> 0.9"},
+      {:logger_json, "~> 6.1"},
       {:opentelemetry, "~> 1.0"},
       {:opentelemetry_api, "~> 1.0"},
       {:opentelemetry_exporter, "~> 1.0"},

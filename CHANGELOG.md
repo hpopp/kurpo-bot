@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2024-11-28
+
+### Added
+
+- Enable GCP formatted logging by setting `GCP_PROJECT_ID` environment variable.
+- Better logging statements with metadata.
+
 ## [0.6.0] - 2024-11-22
 
 ### Added

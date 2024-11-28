@@ -42,6 +42,25 @@ if config_env() == :prod do
         ]
   end
 
+  case System.get_env("GCP_PROJECT_ID") do
+    nil ->
+      :ok
+
+    project_id ->
+      version = :kurpo_bot |> Application.spec() |> Keyword.get(:vsn) |> to_string()
+
+      opts = [
+        metadata: :all,
+        project_id: project_id,
+        service_context: %{
+          service: "kurpo-bot",
+          version: version
+        }
+      ]
+
+      config :logger, :default_handler, formatter: {LoggerJSON.Formatters.GoogleCloud, opts}
+  end
+
   config :nostrum,
     token: System.fetch_env!("KURPO_TOKEN"),
     num_shards: :auto

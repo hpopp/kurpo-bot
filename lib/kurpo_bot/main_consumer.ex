@@ -16,28 +16,35 @@ defmodule KurpoBot.MainConsumer do
   require Logger
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
+    Logger.metadata(author_id: msg.author.id, channel_id: msg.channel_id, guild_id: msg.guild_id)
     msg |> inspect(pretty: true) |> Logger.debug()
 
     case msg.content do
       "!info" ->
+        Logger.info("Received !info.")
         Stats.handle_project_info(msg.channel_id)
 
       "!statsu" ->
+        Logger.info("Received !statsu.")
         Stats.handle_sysinfo(msg.channel_id)
 
       "!sync" ->
         if admin?(msg.author.id) do
           Task.async(fn ->
+            Logger.info("Started channel message sync.")
             Api.create_message(msg.channel_id, "Starting sync...")
+
             Scraper.sync_messages(msg.channel_id, KurpoBot.user_ids())
+
             Api.create_message(msg.channel_id, "Completed sync...")
+            Logger.info("Completed channel message sync.")
           end)
         end
 
         :ignore
 
-      "!" <> _other ->
-        # Ignore other commands
+      "!" <> other ->
+        Logger.warning("Ignoring !#{other} command.")
         :ignore
 
       _ ->
@@ -54,12 +61,12 @@ defmodule KurpoBot.MainConsumer do
   def default_handler(msg) do
     cond do
       mentions?(msg, KurpoBot.bot_id()) && storytime?(msg) ->
-        for _ <- 1..5 do
-          do_random_reply(msg)
-        end
+        for _ <- 1..5, do: do_random_reply(msg)
+        Logger.info("Replied 5 random messages with storytime.")
 
       reply?(msg, KurpoBot.bot_id()) || mentions?(msg, KurpoBot.bot_id()) ->
         do_random_reply(msg)
+        Logger.info("Replied with a random message.")
 
       msg.author.id in KurpoBot.user_ids() ->
         save_message(msg)
