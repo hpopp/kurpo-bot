@@ -8,6 +8,7 @@ defmodule KurpoBot.Scraper do
   """
 
   alias KurpoBot.Repo
+  alias Repo.Channel
   alias Nostrum.Api
   require Logger
 
@@ -57,10 +58,12 @@ defmodule KurpoBot.Scraper do
     |> Enum.filter(fn msg -> msg.author.id in user_ids end)
     |> Enum.filter(fn msg -> !String.starts_with?(msg.content, "!") end)
     |> Enum.map(fn x ->
+      %{guild_id: guild_id} = fetch_guild(x.channel_id, x.guild_id)
+
       %{
         channel_id: x.channel_id,
         content: x.content,
-        guild_id: x.guild_id,
+        guild_id: guild_id,
         message_id: x.id,
         user_id: x.author.id
       }
@@ -71,4 +74,7 @@ defmodule KurpoBot.Scraper do
       |> Repo.insert()
     end)
   end
+
+  defp fetch_guild(channel_id, nil), do: Channel.get_or_insert(channel_id)
+  defp fetch_guild(_channel_id, guild_id), do: %{guild_id: guild_id}
 end
