@@ -9,7 +9,7 @@ This bot is terrible.
 
 This project requires these dependencies to be installed and running:
 
-- Elixir 1.17.x
+- Elixir 1.18.x
 - Erlang 27.x
 - Postgres 14.x
 
