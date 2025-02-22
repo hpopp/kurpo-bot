@@ -33,7 +33,7 @@ defmodule KurpoBot.Repo.Channel do
   def get_or_insert(channel_id) do
     case Repo.get_by(__MODULE__, channel_id: channel_id) do
       nil ->
-        %{guild_id: guild_id} = Api.get_channel!(channel_id)
+        {:ok, %{guild_id: guild_id}} = Api.Channel.get(channel_id)
         channel = %{channel_id: channel_id, guild_id: guild_id}
 
         %__MODULE__{}

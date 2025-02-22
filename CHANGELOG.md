@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fetch and persist channel information during scrape. This is used to persist a channel's `guild_id`,
   which has now been dropped from the API response to fetch channel messages. [#16](https://github.com/hpopp/kurpo-bot/pull/16)
 
+### Fixed
+
+- Removed runtime warnings for unused dependencies.
+- Updated deprecated Nostrum functions.
+
 ## [0.6.1] - 2024-11-28
 
 ### Added

@@ -24,7 +24,7 @@ defmodule KurpoBot.Application do
   end
 
   def initialize_bot_id do
-    {:ok, bot_info} = Nostrum.Api.get_application_information()
+    {:ok, bot_info} = Nostrum.Api.Self.application_information()
     Application.put_env(:kurpo_bot, :bot_id, String.to_integer(bot_info.id))
   end
 
