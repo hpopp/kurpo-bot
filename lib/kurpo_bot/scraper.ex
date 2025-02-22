@@ -37,7 +37,7 @@ defmodule KurpoBot.Scraper do
   defp do_get_messages(channel_id, user_ids, locator) do
     Logger.info("Getting messages for #{channel_id}")
 
-    case Api.get_channel_messages(channel_id, @limit, locator) do
+    case Api.Channel.messages(channel_id, @limit, locator) do
       {:ok, []} ->
         Logger.info("Finished sync for channel #{channel_id}, users #{inspect(user_ids)}")
         :ok

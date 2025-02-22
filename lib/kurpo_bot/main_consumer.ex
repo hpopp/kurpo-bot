@@ -11,7 +11,7 @@ defmodule KurpoBot.MainConsumer do
 
   alias KurpoBot.Handler.Stats
   alias KurpoBot.{MessageService, Repo, Scraper}
-  alias Nostrum.Api
+  alias Nostrum.Api.{Channel, Message}
 
   require Logger
 
@@ -32,11 +32,11 @@ defmodule KurpoBot.MainConsumer do
         if admin?(msg.author.id) do
           Task.async(fn ->
             Logger.info("Started channel message sync.")
-            Api.create_message(msg.channel_id, "Starting sync...")
+            Message.create(msg.channel_id, content: "Starting sync...")
 
             Scraper.sync_messages(msg.channel_id, KurpoBot.user_ids())
 
-            Api.create_message(msg.channel_id, "Completed sync...")
+            Message.create(msg.channel_id, content: "Completed sync...")
             Logger.info("Completed channel message sync.")
           end)
         end
@@ -89,11 +89,11 @@ defmodule KurpoBot.MainConsumer do
 
   def type_and_send(channel_id, content) do
     3_000 |> :rand.uniform() |> Process.sleep()
-    Api.start_typing(channel_id)
+    Channel.start_typing(channel_id)
 
     t = round(String.length(content) / 6)
     Process.sleep(t * 1000)
-    Api.create_message(channel_id, content)
+    Message.create(channel_id, content: content)
   end
 
   def admin?(user_id) do

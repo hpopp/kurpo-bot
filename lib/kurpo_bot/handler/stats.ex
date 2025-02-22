@@ -36,7 +36,7 @@ defmodule KurpoBot.Handler.Stats do
       |> Embed.put_url("https://github.com/hpopp/kurpo-bot")
       |> put_fields(info, true)
 
-    Api.create_message(channel_id, embed: embed)
+    Api.Message.create(channel_id, embeds: [embed])
   end
 
   def handle_sysinfo(channel_id) do
@@ -66,7 +66,7 @@ defmodule KurpoBot.Handler.Stats do
       |> Embed.put_color(@white)
       |> put_fields(info, true)
 
-    Api.create_message(channel_id, embed: embed)
+    Api.Message.create(channel_id, embeds: [embed])
   end
 
   defp put_fields(embed, fields, inline) do

@@ -14,7 +14,9 @@ config :nostrum,
     :guild_message_reactions,
     :guild_message_typing,
     :message_content
-  ]
+  ],
+  streamlink: false,
+  youtubedl: false
 
 # Configures Elixir's Logger
 config :logger, :console,
