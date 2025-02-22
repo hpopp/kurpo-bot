@@ -88,6 +88,6 @@ certificate, which could be different from the hostname in `DATABASE_URL` used i
 
 ## License
 
-Copyright (c) 2021-2024 Henry Popp
+Copyright (c) 2021-2025 Henry Popp
 
 This library is MIT licensed. See the [LICENSE](https://github.com/hpopp/kurpo-bot/blob/master/LICENSE) for details.
