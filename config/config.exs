@@ -15,6 +15,7 @@ config :nostrum,
     :guild_message_typing,
     :message_content
   ],
+  ffmpeg: false,
   streamlink: false,
   youtubedl: false
 
