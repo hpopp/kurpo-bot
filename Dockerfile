@@ -1,9 +1,7 @@
-FROM elixir:1.18-alpine as builder
+FROM elixir:1.18-alpine AS builder
 
 WORKDIR /kurpo-bot
 
-ARG CREATED
-ARG VERSION
 ENV MIX_ENV=prod
 
 RUN apk add --update --no-cache bash git openssh openssl
@@ -32,6 +30,9 @@ COPY rel rel
 RUN mix release kurpo_bot
 
 FROM alpine:3
+
+ARG CREATED
+ARG VERSION
 
 LABEL org.opencontainers.image.authors="Henry Popp <henry@codedge.io>"
 LABEL org.opencontainers.image.created="${CREATED}"
