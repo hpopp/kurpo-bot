@@ -9,7 +9,8 @@ defmodule KurpoBot.Application do
       [
         KurpoBot.Repo,
         KurpoBot.MainConsumer,
-        migrate_database(System.get_env("MIX_ENV"))
+        migrate_database(System.get_env("MIX_ENV")),
+        {TcpHealthCheck, []}
       ]
       |> Enum.filter(&(not is_nil(&1)))
 

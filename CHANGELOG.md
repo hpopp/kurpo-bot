@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.4] - 2025-05-03
+
+### Added
+
+- TCP liveness socket now available on port 4321. [#19](https://github.com/hpopp/kurpo-bot/pull/19)
+- Better OpenContainer labels for the Docker image. [#19](https://github.com/hpopp/kurpo-bot/pull/19)
+
 ## [0.6.3] - 2025-03-04
 
 ### Fixed

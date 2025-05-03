@@ -36,13 +36,14 @@ defmodule KurpoBot.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev]},
       {:nostrum, "~> 0.9"},
-      {:logger_json, "~> 6.1"},
+      {:logger_json, "~> 7.0"},
       {:opentelemetry, "~> 1.0"},
       {:opentelemetry_api, "~> 1.0"},
       {:opentelemetry_exporter, "~> 1.0"},
       {:opentelemetry_ecto, "~> 1.0"},
       {:postgrex, ">= 0.0.0"},
-      {:ssl_verify_fun, "~> 1.1"}
+      {:ssl_verify_fun, "~> 1.1"},
+      {:tcp_health_check, "~> 0.1.0"}
     ]
   end
 

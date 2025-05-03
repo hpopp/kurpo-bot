@@ -1,5 +1,5 @@
 [![CI](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.6.3-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
+[![Version](https://img.shields.io/badge/version-0.6.4-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
 [![Last Updated](https://img.shields.io/github/last-commit/hpopp/kurpo-bot.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
 
 # KurpoBot
@@ -80,6 +80,10 @@ Deployments require the following environment variables to be set in containers:
 | `KURPO_TOKEN`         | Discord bot token.                                           | x         |             |
 | `LOG_LEVEL`           | Logger level.                                                |           | `info`      |
 | `POD_IP`              | Host for Elixir release node name.                           |           | `127.0.0.1` |
+
+### Liveness
+
+A TCP liveness socket is available on port 4321.
 
 ### Configuring SSL for Database Connections
 
