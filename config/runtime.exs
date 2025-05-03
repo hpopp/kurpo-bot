@@ -58,7 +58,7 @@ if config_env() == :prod do
         }
       ]
 
-      config :logger, :default_handler, formatter: {LoggerJSON.Formatters.GoogleCloud, opts}
+      config :logger, :default_handler, formatter: LoggerJSON.Formatters.GoogleCloud.new(opts)
   end
 
   config :nostrum,
