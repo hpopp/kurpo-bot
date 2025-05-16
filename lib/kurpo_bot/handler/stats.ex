@@ -16,11 +16,10 @@ defmodule KurpoBot.Handler.Stats do
   def handle_project_info(channel_id) do
     # Memory is returned in bytes
     memory = div(:erlang.memory(:total), 1_000_000)
-    version = to_string(Application.spec(:kurpo_bot, :vsn))
     messages = Repo.total(Message)
 
     info = [
-      {"Version", version},
+      {"Version", KurpoBot.version()},
       {"Library", "[KurpoBot](https://github.com/hpopp/kurpo-bot)"},
       {"Author", "storm.drain"},
       {"Uptime", uptime() || "--"},

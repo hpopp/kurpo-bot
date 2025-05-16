@@ -10,6 +10,7 @@ if config_env() == :prod do
       |> Enum.map(&String.to_integer/1)
       |> Enum.uniq(),
     bot_id: 1234,
+    healthcheck_port: "HEALTHCHECK_PORT" |> System.get_env("4321") |> String.to_integer(),
     user_ids:
       System.get_env("KURPO_IDS", "1234")
       |> String.split(",")
