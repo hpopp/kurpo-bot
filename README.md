@@ -12,7 +12,7 @@ This project requires these dependencies to be installed and running:
 
 - Elixir 1.18.x
 - Erlang 27.x
-- Postgres 14.x
+- Postgres 16.x
 
 ## Getting Started
 
@@ -75,6 +75,7 @@ Deployments require the following environment variables to be set in containers:
 | `DATABASE_KEYFILE`    | Path to database client key file for SSL connection.         |           |             |
 | `DATABASE_URL`        | Database URL.                                                | x         |             |
 | `GCP_PROJECT_ID`      | GCP project identifier. Enables GCP formatted logging.       |           |             |
+| `HEALTHCHECK_PORT`    | Server healthcheck port.                                     |           | `4321`      |
 | `KURPO_ADMIN_IDS`     | Administrator Discord user IDs.                              |           | `1234`      |
 | `KURPO_IDS`           | Discord user IDs to watch.                                   | x         |             |
 | `KURPO_TOKEN`         | Discord bot token.                                           | x         |             |
@@ -83,7 +84,7 @@ Deployments require the following environment variables to be set in containers:
 
 ### Liveness
 
-A TCP liveness socket is available on port 4321.
+A TCP liveness socket is available on port `HEALTHCHECK_PORT` (default 4321) in production releases.
 
 ### Configuring SSL for Database Connections
 

@@ -10,7 +10,7 @@ defmodule KurpoBot.Application do
         KurpoBot.Repo,
         KurpoBot.MainConsumer,
         migrate_database(System.get_env("MIX_ENV")),
-        {TcpHealthCheck, []}
+        tcp_healthcheck()
       ]
       |> Enum.filter(&(not is_nil(&1)))
 
@@ -27,6 +27,14 @@ defmodule KurpoBot.Application do
   def initialize_bot_id do
     {:ok, bot_info} = Nostrum.Api.Self.application_information()
     Application.put_env(:kurpo_bot, :bot_id, String.to_integer(bot_info.id))
+  end
+
+  @spec tcp_healthcheck :: {module(), [term()]} | nil
+  defp tcp_healthcheck do
+    case Application.get_env(:kurpo_bot, :healthcheck_port) do
+      nil -> nil
+      port -> {TcpHealthCheck, [port: port]}
+    end
   end
 
   defp migrate_database("test"), do: nil
