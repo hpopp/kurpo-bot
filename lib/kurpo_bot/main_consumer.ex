@@ -15,6 +15,7 @@ defmodule KurpoBot.MainConsumer do
 
   require Logger
 
+  @spec handle_event(Nostrum.Consumer.event()) :: any()
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     Logger.metadata(author_id: msg.author.id, channel_id: msg.channel_id, guild_id: msg.guild_id)
     msg |> inspect(pretty: true) |> Logger.debug()
@@ -50,6 +51,7 @@ defmodule KurpoBot.MainConsumer do
     :noop
   end
 
+  @spec default_handler(Nostrum.Struct.Message.t()) :: :ignore
   def default_handler(msg) do
     cond do
       mentions?(msg, KurpoBot.bot_id()) && storytime?(msg) ->
@@ -68,6 +70,8 @@ defmodule KurpoBot.MainConsumer do
     end
   end
 
+  @spec do_random_reply(Nostrum.Struct.Message.t()) ::
+          {:ok, Nostrum.Struct.Message.t()} | Nostrum.Api.error()
   def do_random_reply(msg) do
     message =
       if ping?(msg) do
@@ -79,6 +83,8 @@ defmodule KurpoBot.MainConsumer do
     type_and_send(msg.channel_id, message.content)
   end
 
+  @spec type_and_send(non_neg_integer(), String.t()) ::
+          {:ok, Nostrum.Struct.Message.t()} | Nostrum.Api.error()
   def type_and_send(channel_id, content) do
     3_000 |> :rand.uniform() |> Process.sleep()
     Channel.start_typing(channel_id)
@@ -115,6 +121,8 @@ defmodule KurpoBot.MainConsumer do
     m.author.id in user_ids
   end
 
+  @spec save_message(Nostrum.Struct.Message.t()) ::
+          {:ok, Repo.Message.t()} | {:error, Ecto.Changeset.t()}
   def save_message(message) do
     attrs = %{
       channel_id: message.channel_id,

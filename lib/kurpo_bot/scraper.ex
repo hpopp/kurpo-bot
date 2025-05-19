@@ -30,10 +30,12 @@ defmodule KurpoBot.Scraper do
     do_get_messages(channel_id, user_ids)
   end
 
+  @spec do_get_messages(non_neg_integer(), [non_neg_integer()]) :: :ok
   defp do_get_messages(channel_id, user_ids) do
     do_get_messages(channel_id, user_ids, {})
   end
 
+  @spec do_get_messages(non_neg_integer(), [non_neg_integer()], any()) :: :ok
   defp do_get_messages(channel_id, user_ids, locator) do
     Logger.info("Getting messages for #{channel_id}")
 
@@ -80,6 +82,7 @@ defmodule KurpoBot.Scraper do
     author.id in user_ids and !String.starts_with?(content, "!")
   end
 
+  @spec fetch_guild(non_neg_integer(), non_neg_integer() | nil) :: %{guild_id: non_neg_integer()}
   defp fetch_guild(channel_id, nil), do: Channel.get_or_insert(channel_id)
   defp fetch_guild(_channel_id, guild_id), do: %{guild_id: guild_id}
 end
