@@ -53,10 +53,10 @@ defmodule KurpoBot.Scraper do
     end
   end
 
+  @spec filter_and_save([Nostrum.Struct.Message.t()], [non_neg_integer()]) :: :ok
   defp filter_and_save(messages, user_ids) do
     messages
-    |> Enum.filter(fn msg -> msg.author.id in user_ids end)
-    |> Enum.filter(fn msg -> !String.starts_with?(msg.content, "!") end)
+    |> Enum.filter(fn msg -> valid_message?(msg, user_ids) end)
     |> Enum.map(fn x ->
       %{guild_id: guild_id} = fetch_guild(x.channel_id, x.guild_id)
 
@@ -73,6 +73,11 @@ defmodule KurpoBot.Scraper do
       |> Repo.Message.changeset(attrs)
       |> Repo.insert()
     end)
+  end
+
+  @spec valid_message?(Nostrum.Struct.Message.t(), [non_neg_integer()]) :: boolean()
+  defp valid_message?(%Nostrum.Struct.Message{author: author, content: content}, user_ids) do
+    author.id in user_ids and !String.starts_with?(content, "!")
   end
 
   defp fetch_guild(channel_id, nil), do: Channel.get_or_insert(channel_id)
