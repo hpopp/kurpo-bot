@@ -37,7 +37,7 @@ defmodule KurpoBot.Repo.Channel do
   end
 
   @spec changeset(t(), map()) :: Ecto.Changeset.t()
-  def changeset(model, params \\ %{}) do
+  def changeset(%__MODULE__{} = model, params \\ %{}) do
     required = [:channel_id, :guild_id]
     optional = [:is_ignored]
 
@@ -48,7 +48,7 @@ defmodule KurpoBot.Repo.Channel do
   end
 
   @spec get_or_insert(non_neg_integer()) :: t()
-  def get_or_insert(channel_id) do
+  def get_or_insert(channel_id) when is_integer(channel_id) and channel_id > 0 do
     case Repo.get_by(__MODULE__, channel_id: channel_id) do
       nil ->
         {:ok, %{guild_id: guild_id}} = Api.Channel.get(channel_id)

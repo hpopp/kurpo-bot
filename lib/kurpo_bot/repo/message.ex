@@ -41,8 +41,8 @@ defmodule KurpoBot.Repo.Message do
   @doc """
   Ecto changeset for insert.
   """
-  @spec changeset(t, map) :: Ecto.Changeset.t()
-  def changeset(model, params \\ %{}) do
+  @spec changeset(t(), map()) :: Ecto.Changeset.t()
+  def changeset(%__MODULE__{} = model, params \\ %{}) do
     required = [:channel_id, :content, :message_id, :user_id]
     optional = [:guild_id]
 

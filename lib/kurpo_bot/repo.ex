@@ -10,18 +10,12 @@ defmodule KurpoBot.Repo do
   import Ecto.Query
 
   @doc """
-  Fetches a random record for given model.
-  """
-  @spec get_random(module) :: struct | nil
-  def get_random(model) do
-    model
-    |> order_by(fragment("RANDOM()"))
-    |> limit(1)
-    |> one()
-  end
-
-  @doc """
   Returns a total count of items for given model.
+
+  ## Examples
+
+      iex> KurpoBot.Repo.total(KurpoBot.Repo.Message)
+      0
   """
   @spec total(module) :: non_neg_integer
   def total(query) do
