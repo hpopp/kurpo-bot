@@ -135,6 +135,7 @@ defmodule KurpoBot.MainConsumer do
     %Repo.Message{}
     |> Repo.Message.changeset(attrs)
     |> Repo.insert()
+    |> IO.inspect()
   end
 
   @spec do_sync(non_neg_integer()) :: :ok

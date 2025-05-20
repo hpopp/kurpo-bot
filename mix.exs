@@ -5,6 +5,7 @@ defmodule KurpoBot.MixProject do
 
   def project do
     [
+      aliases: aliases(),
       app: :kurpo_bot,
       deps: deps(),
       dialyzer: dialyzer(),
@@ -36,6 +37,7 @@ defmodule KurpoBot.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev]},
+      {:faker, "~> 0.17", only: [:dev, :test]},
       {:nostrum, "~> 0.9"},
       {:logger_json, "~> 7.0"},
       {:opentelemetry, "~> 1.0"},
@@ -59,6 +61,15 @@ defmodule KurpoBot.MixProject do
         include_executables_for: [:unix],
         path: "dist"
       ]
+    ]
+  end
+
+  defp aliases do
+    [
+      setup: ["deps.get", "ecto.setup"],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]
   end
 
