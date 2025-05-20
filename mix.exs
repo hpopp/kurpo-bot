@@ -14,6 +14,7 @@ defmodule KurpoBot.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       releases: releases(),
       start_permanent: Mix.env() == :prod,
+      test_coverage: test_coverage(),
       version: @version
     ]
   end
@@ -61,6 +62,17 @@ defmodule KurpoBot.MixProject do
         include_executables_for: [:unix],
         path: "dist"
       ]
+    ]
+  end
+
+  defp test_coverage do
+    [
+      ignore_modules: [
+        KurpoBot.Task.MigrateDatabase,
+        KurpoBot.DataCase,
+        KurpoBot.DataHelper
+      ],
+      summary: [threshold: 30]
     ]
   end
 

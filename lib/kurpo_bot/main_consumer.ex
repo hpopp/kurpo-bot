@@ -9,6 +9,8 @@ defmodule KurpoBot.MainConsumer do
 
   use Nostrum.Consumer
 
+  import KurpoBot.MessageUtil
+
   alias KurpoBot.Handler.Stats
   alias KurpoBot.{MessageService, Repo, Scraper}
   alias Nostrum.Api.{Channel, Message}
@@ -30,7 +32,7 @@ defmodule KurpoBot.MainConsumer do
         Stats.handle_sysinfo(msg.channel_id)
 
       "!sync" ->
-        if admin?(msg.author.id) do
+        if KurpoBot.admin?(msg.author.id) do
           Task.async(fn -> do_sync(msg.channel_id) end)
         end
 
@@ -94,33 +96,6 @@ defmodule KurpoBot.MainConsumer do
     Message.create(channel_id, content: content)
   end
 
-  @spec admin?(integer()) :: boolean()
-  def admin?(user_id) when is_integer(user_id) do
-    user_id in KurpoBot.admin_ids()
-  end
-
-  @spec mentions?(Nostrum.Struct.Message.t(), integer() | [integer()]) :: boolean()
-  def mentions?(%Nostrum.Struct.Message{mentions: mentions}, user_id) when is_integer(user_id) do
-    Enum.any?(mentions, fn m -> m.id == user_id end)
-  end
-
-  def mentions?(%Nostrum.Struct.Message{mentions: mentions}, user_ids) when is_list(user_ids) do
-    Enum.any?(mentions, fn m -> m.id in user_ids end)
-  end
-
-  @spec reply?(Nostrum.Struct.Message.t(), integer() | [integer()]) :: boolean()
-  def reply?(%Nostrum.Struct.Message{referenced_message: nil}, _user_ids) do
-    false
-  end
-
-  def reply?(%Nostrum.Struct.Message{referenced_message: m}, user_id) when is_integer(user_id) do
-    m.author.id == user_id
-  end
-
-  def reply?(%Nostrum.Struct.Message{referenced_message: m}, user_ids) when is_list(user_ids) do
-    m.author.id in user_ids
-  end
-
   @spec save_message(Nostrum.Struct.Message.t()) ::
           {:ok, Repo.Message.t()} | {:error, Ecto.Changeset.t()}
   def save_message(message) do
@@ -135,7 +110,6 @@ defmodule KurpoBot.MainConsumer do
     %Repo.Message{}
     |> Repo.Message.changeset(attrs)
     |> Repo.insert()
-    |> IO.inspect()
   end
 
   @spec do_sync(non_neg_integer()) :: :ok
@@ -147,22 +121,5 @@ defmodule KurpoBot.MainConsumer do
 
     Message.create(channel_id, content: "Completed sync...")
     Logger.info("Completed channel message sync.")
-  end
-
-  @spec storytime?(Nostrum.Struct.Message.t()) :: boolean()
-  defp storytime?(%Nostrum.Struct.Message{} = msg) do
-    contains?(msg, "storytime")
-  end
-
-  @spec ping?(Nostrum.Struct.Message.t()) :: boolean()
-  defp ping?(%Nostrum.Struct.Message{} = msg) do
-    contains?(msg, "ping")
-  end
-
-  @spec contains?(Nostrum.Struct.Message.t(), String.t()) :: boolean()
-  defp contains?(%Nostrum.Struct.Message{content: content}, text) do
-    content
-    |> String.downcase()
-    |> String.contains?(text)
   end
 end
