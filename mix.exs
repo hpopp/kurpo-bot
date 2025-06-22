@@ -34,17 +34,22 @@ defmodule KurpoBot.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:bandit, "~> 1.0"},
+      {:commandex, "~> 0.5.1"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev], runtime: false},
       {:ecto_sql, "~> 3.0"},
       {:ex_doc, ">= 0.0.0", only: [:dev]},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:nostrum, "~> 0.9"},
+      {:jason, "~> 1.4"},
+      {:jsend, "~> 0.1.0"},
       {:logger_json, "~> 7.0"},
+      {:nostrum, "~> 0.9"},
       {:opentelemetry, "~> 1.0"},
       {:opentelemetry_api, "~> 1.0"},
       {:opentelemetry_exporter, "~> 1.0"},
       {:opentelemetry_ecto, "~> 1.0"},
+      {:plug, "~> 1.15"},
       {:postgrex, ">= 0.0.0"},
       {:ssl_verify_fun, "~> 1.1"},
       {:tcp_health_check, "~> 0.1.0"}

@@ -32,6 +32,10 @@ kurpo_bot-*.tar
 /priv/plts/*.plt
 /priv/plts/*.plt.hash
 
+# Ignore Import/Export files
+/priv/exports
+/priv/uploads
+
 # Various
 .DS_Store
 *.swp
