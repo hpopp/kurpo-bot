@@ -10,8 +10,8 @@ defmodule KurpoBot.MessageService do
   @doc """
   Fetches a random message from given users.
   """
-  @spec get_random([non_neg_integer]) :: KurpoBot.Repo.Message.t() | nil
-  def get_random(user_ids) do
+  @spec get_random([non_neg_integer()]) :: KurpoBot.Repo.Message.t() | nil
+  def get_random(user_ids) when is_list(user_ids) do
     Message
     |> where([m], m.user_id in ^user_ids)
     |> order_by(fragment("RANDOM()"))
@@ -23,8 +23,8 @@ defmodule KurpoBot.MessageService do
   Fetches a random message from given users that includes
   a mention of another user.
   """
-  @spec get_random_with_ping([non_neg_integer]) :: KurpoBot.Repo.Message.t() | nil
-  def get_random_with_ping(user_ids) do
+  @spec get_random_with_ping([non_neg_integer()]) :: KurpoBot.Repo.Message.t() | nil
+  def get_random_with_ping(user_ids) when is_list(user_ids) do
     Message
     |> where([m], m.user_id in ^user_ids)
     |> where([m], ilike(m.content, ^"%\@%"))
@@ -36,8 +36,8 @@ defmodule KurpoBot.MessageService do
   @doc """
   Returns total messages for given users.
   """
-  @spec total([non_neg_integer]) :: non_neg_integer
-  def total(user_ids) do
+  @spec total([non_neg_integer()]) :: non_neg_integer()
+  def total(user_ids) when is_list(user_ids) do
     Message
     |> where([m], m.user_id in ^user_ids)
     |> select([m], count(m.id))

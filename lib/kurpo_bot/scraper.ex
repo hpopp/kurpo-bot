@@ -8,7 +8,7 @@ defmodule KurpoBot.Scraper do
   """
 
   alias KurpoBot.Repo
-  alias Repo.Channel
+  alias KurpoBot.Repo.Channel
   alias Nostrum.Api
   require Logger
 
@@ -30,10 +30,12 @@ defmodule KurpoBot.Scraper do
     do_get_messages(channel_id, user_ids)
   end
 
+  @spec do_get_messages(non_neg_integer(), [non_neg_integer()]) :: :ok
   defp do_get_messages(channel_id, user_ids) do
     do_get_messages(channel_id, user_ids, {})
   end
 
+  @spec do_get_messages(non_neg_integer(), [non_neg_integer()], any()) :: :ok
   defp do_get_messages(channel_id, user_ids, locator) do
     Logger.info("Getting messages for #{channel_id}")
 
@@ -53,10 +55,10 @@ defmodule KurpoBot.Scraper do
     end
   end
 
+  @spec filter_and_save([Nostrum.Struct.Message.t()], [non_neg_integer()]) :: :ok
   defp filter_and_save(messages, user_ids) do
     messages
-    |> Enum.filter(fn msg -> msg.author.id in user_ids end)
-    |> Enum.filter(fn msg -> !String.starts_with?(msg.content, "!") end)
+    |> Enum.filter(fn msg -> valid_message?(msg, user_ids) end)
     |> Enum.map(fn x ->
       %{guild_id: guild_id} = fetch_guild(x.channel_id, x.guild_id)
 
@@ -75,6 +77,12 @@ defmodule KurpoBot.Scraper do
     end)
   end
 
+  @spec valid_message?(Nostrum.Struct.Message.t(), [non_neg_integer()]) :: boolean()
+  defp valid_message?(%Nostrum.Struct.Message{author: author, content: content}, user_ids) do
+    author.id in user_ids and !String.starts_with?(content, "!")
+  end
+
+  @spec fetch_guild(non_neg_integer(), non_neg_integer() | nil) :: %{guild_id: non_neg_integer()}
   defp fetch_guild(channel_id, nil), do: Channel.get_or_insert(channel_id)
   defp fetch_guild(_channel_id, guild_id), do: %{guild_id: guild_id}
 end

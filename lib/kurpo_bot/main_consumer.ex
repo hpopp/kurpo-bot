@@ -9,12 +9,15 @@ defmodule KurpoBot.MainConsumer do
 
   use Nostrum.Consumer
 
+  import KurpoBot.MessageUtil
+
   alias KurpoBot.Handler.Stats
   alias KurpoBot.{MessageService, Repo, Scraper}
   alias Nostrum.Api.{Channel, Message}
 
   require Logger
 
+  @spec handle_event(Nostrum.Consumer.event()) :: any()
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
     Logger.metadata(author_id: msg.author.id, channel_id: msg.channel_id, guild_id: msg.guild_id)
     msg |> inspect(pretty: true) |> Logger.debug()
@@ -29,16 +32,8 @@ defmodule KurpoBot.MainConsumer do
         Stats.handle_sysinfo(msg.channel_id)
 
       "!sync" ->
-        if admin?(msg.author.id) do
-          Task.async(fn ->
-            Logger.info("Started channel message sync.")
-            Message.create(msg.channel_id, content: "Starting sync...")
-
-            Scraper.sync_messages(msg.channel_id, KurpoBot.user_ids())
-
-            Message.create(msg.channel_id, content: "Completed sync...")
-            Logger.info("Completed channel message sync.")
-          end)
+        if KurpoBot.admin?(msg.author.id) do
+          Task.async(fn -> do_sync(msg.channel_id) end)
         end
 
         :ignore
@@ -58,6 +53,7 @@ defmodule KurpoBot.MainConsumer do
     :noop
   end
 
+  @spec default_handler(Nostrum.Struct.Message.t()) :: :ignore
   def default_handler(msg) do
     cond do
       mentions?(msg, KurpoBot.bot_id()) && storytime?(msg) ->
@@ -76,6 +72,8 @@ defmodule KurpoBot.MainConsumer do
     end
   end
 
+  @spec do_random_reply(Nostrum.Struct.Message.t()) ::
+          {:ok, Nostrum.Struct.Message.t()} | Nostrum.Api.error()
   def do_random_reply(msg) do
     message =
       if ping?(msg) do
@@ -87,6 +85,8 @@ defmodule KurpoBot.MainConsumer do
     type_and_send(msg.channel_id, message.content)
   end
 
+  @spec type_and_send(non_neg_integer(), String.t()) ::
+          {:ok, Nostrum.Struct.Message.t()} | Nostrum.Api.error()
   def type_and_send(channel_id, content) do
     3_000 |> :rand.uniform() |> Process.sleep()
     Channel.start_typing(channel_id)
@@ -96,30 +96,8 @@ defmodule KurpoBot.MainConsumer do
     Message.create(channel_id, content: content)
   end
 
-  def admin?(user_id) do
-    user_id in KurpoBot.admin_ids()
-  end
-
-  def mentions?(message, user_id) when is_integer(user_id) do
-    Enum.any?(message.mentions, fn m -> m.id == user_id end)
-  end
-
-  def mentions?(message, user_ids) when is_list(user_ids) do
-    Enum.any?(message.mentions, fn m -> m.id in user_ids end)
-  end
-
-  def reply?(%{referenced_message: nil}, _user_ids) do
-    false
-  end
-
-  def reply?(%{referenced_message: m}, user_id) when is_integer(user_id) do
-    m.author.id == user_id
-  end
-
-  def reply?(%{referenced_message: m}, user_ids) when is_list(user_ids) do
-    m.author.id in user_ids
-  end
-
+  @spec save_message(Nostrum.Struct.Message.t()) ::
+          {:ok, Repo.Message.t()} | {:error, Ecto.Changeset.t()}
   def save_message(message) do
     attrs = %{
       channel_id: message.channel_id,
@@ -134,15 +112,14 @@ defmodule KurpoBot.MainConsumer do
     |> Repo.insert()
   end
 
-  defp storytime?(msg) do
-    msg.content
-    |> String.downcase()
-    |> String.contains?("storytime")
-  end
+  @spec do_sync(non_neg_integer()) :: :ok
+  defp do_sync(channel_id) when is_integer(channel_id) and channel_id >= 0 do
+    Logger.info("Started channel message sync.")
+    Message.create(channel_id, content: "Starting sync...")
 
-  defp ping?(msg) do
-    msg.content
-    |> String.downcase()
-    |> String.contains?("ping")
+    Scraper.sync_messages(channel_id, KurpoBot.user_ids())
+
+    Message.create(channel_id, content: "Completed sync...")
+    Logger.info("Completed channel message sync.")
   end
 end

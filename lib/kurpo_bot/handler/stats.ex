@@ -3,16 +3,17 @@ defmodule KurpoBot.Handler.Stats do
   Formats response messages for project info and system stats.
   """
 
-  alias Nostrum.Api
-  alias Nostrum.Struct.Embed
   alias KurpoBot.Repo
   alias KurpoBot.Repo.Message
+  alias Nostrum.Api
+  alias Nostrum.Struct.Embed
   require Logger
 
   @title "KurpoBot"
   @description "Basically the real Kurpo."
   @white 0xFFFFFF
 
+  @spec handle_project_info(Nostrum.Struct.Channel.id()) :: {:ok, Nostrum.Struct.Message.t()}
   def handle_project_info(channel_id) do
     # Memory is returned in bytes
     memory = div(:erlang.memory(:total), 1_000_000)
@@ -38,6 +39,7 @@ defmodule KurpoBot.Handler.Stats do
     Api.Message.create(channel_id, embeds: [embed])
   end
 
+  @spec handle_sysinfo(Nostrum.Struct.Channel.id()) :: {:ok, Nostrum.Struct.Message.t()}
   def handle_sysinfo(channel_id) do
     memories = :erlang.memory()
     processes = length(:erlang.processes())
@@ -68,20 +70,25 @@ defmodule KurpoBot.Handler.Stats do
     Api.Message.create(channel_id, embeds: [embed])
   end
 
+  @spec put_fields(Embed.t(), [{String.t(), String.t()}], boolean()) :: Embed.t()
   defp put_fields(embed, fields, inline) do
     Enum.reduce(fields, embed, fn {name, value}, embed ->
       Embed.put_field(embed, name, value, inline)
     end)
   end
 
-  # Returns a nicely formatted uptime string
+  @doc """
+  Returns a nicely formatted uptime string.
+  """
+  @spec uptime :: String.t() | nil
   def uptime do
     {time, _} = :erlang.statistics(:wall_clock)
     min = div(time, 1000 * 60)
     {hours, min} = {div(min, 60), rem(min, 60)}
     {days, hours} = {div(hours, 24), rem(hours, 24)}
 
-    Stream.zip([min, hours, days], ["m", "h", "d"])
+    [min, hours, days]
+    |> Stream.zip(["m", "h", "d"])
     |> Enum.reduce("", fn
       {0, _glyph}, acc -> acc
       {t, glyph}, acc -> " #{t}" <> glyph <> acc
