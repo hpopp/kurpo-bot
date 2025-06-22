@@ -35,6 +35,7 @@ defmodule KurpoBot.MainConsumerTest do
     end
   end
 
+  @spec nostrum_message(map()) :: Nostrum.Struct.Message.t()
   def nostrum_message(attrs \\ %{}) do
     struct(
       %Nostrum.Struct.Message{

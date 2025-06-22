@@ -8,7 +8,7 @@ defmodule KurpoBot.Scraper do
   """
 
   alias KurpoBot.Repo
-  alias Repo.Channel
+  alias KurpoBot.Repo.Channel
   alias Nostrum.Api
   require Logger
 

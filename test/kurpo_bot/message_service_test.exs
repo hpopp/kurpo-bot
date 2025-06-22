@@ -15,7 +15,7 @@ defmodule KurpoBot.MessageServiceTest do
     user_id = 1234
     m1 = insert!(:message, user_id: user_id, content: "Example <@!1234>")
     m2 = insert!(:message, user_id: user_id, content: "Another <@!2222>")
-    m3 = insert!(:message, user_id: user_id)
+    _m3 = insert!(:message, user_id: user_id)
     _m4 = insert!(:message, user_id: 9999)
 
     message = KurpoBot.MessageService.get_random_with_ping([user_id])
@@ -24,8 +24,8 @@ defmodule KurpoBot.MessageServiceTest do
 
   test "total/1 returns the total messages for given users" do
     user_id = 1234
-    m1 = insert!(:message, user_id: user_id)
-    m2 = insert!(:message, user_id: user_id)
+    _m1 = insert!(:message, user_id: user_id)
+    _m2 = insert!(:message, user_id: user_id)
     _m3 = insert!(:message, user_id: 9999)
 
     assert KurpoBot.MessageService.total([user_id]) == 2

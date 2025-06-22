@@ -3,6 +3,8 @@ defmodule KurpoBot.Application do
 
   use Application
 
+  alias Nostrum.Api.Self
+
   @impl true
   @spec start(Application.start_type(), start_args :: term()) ::
           {:ok, pid()} | {:ok, pid(), Application.state()} | {:error, reason :: term()}
@@ -28,7 +30,7 @@ defmodule KurpoBot.Application do
 
   @spec initialize_bot_id :: :ok
   def initialize_bot_id do
-    {:ok, bot_info} = Nostrum.Api.Self.application_information()
+    {:ok, bot_info} = Self.application_information()
     Application.put_env(:kurpo_bot, :bot_id, String.to_integer(bot_info.id))
   end
 
