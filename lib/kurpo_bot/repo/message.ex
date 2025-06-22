@@ -6,6 +6,8 @@ defmodule KurpoBot.Repo.Message do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {JSON.Encoder, except: [:__meta__]}
+
   @type id :: non_neg_integer()
 
   @typedoc """

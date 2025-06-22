@@ -10,6 +10,8 @@ defmodule KurpoBot.Repo.Channel do
   alias KurpoBot.Repo
   alias Nostrum.Api
 
+  @derive {JSON.Encoder, except: [:__meta__]}
+
   @type id :: non_neg_integer()
 
   @typedoc """
@@ -44,7 +46,6 @@ defmodule KurpoBot.Repo.Channel do
     model
     |> cast(params, required ++ optional)
     |> validate_required(required)
-    |> unique_constraint(:channel_id)
   end
 
   @spec get_or_insert(non_neg_integer()) :: t()

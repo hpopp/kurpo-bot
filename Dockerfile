@@ -58,6 +58,6 @@ COPY --from=builder --chown=nobody:nobody /kurpo-bot/dist/ ./
 ENV HOME=/app
 ENV MIX_ENV=prod
 
-EXPOSE 4321
+EXPOSE 4000 4321
 
 CMD ["bin/kurpo_bot", "start"]

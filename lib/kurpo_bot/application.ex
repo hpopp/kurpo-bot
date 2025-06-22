@@ -14,7 +14,8 @@ defmodule KurpoBot.Application do
         KurpoBot.Repo,
         KurpoBot.MainConsumer,
         migrate_database(System.get_env("MIX_ENV")),
-        tcp_healthcheck()
+        tcp_healthcheck(),
+        diagnostic_server()
       ]
       |> Enum.filter(&(not is_nil(&1)))
 
@@ -39,6 +40,14 @@ defmodule KurpoBot.Application do
     case Application.get_env(:kurpo_bot, :healthcheck_port) do
       nil -> nil
       port -> {TcpHealthCheck, [port: port]}
+    end
+  end
+
+  @spec diagnostic_server :: {module(), [term()]} | nil
+  defp diagnostic_server do
+    case Application.get_env(:kurpo_bot, :diagnostic_port, 4000) do
+      nil -> nil
+      port -> {Bandit, [plug: KurpoBot.Router, port: port]}
     end
   end
 
