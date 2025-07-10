@@ -1,5 +1,5 @@
 [![CI](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/hpopp/kurpo-bot/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.6.6-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
+[![Version](https://img.shields.io/badge/version-0.6.7-orange.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
 [![Last Updated](https://img.shields.io/github/last-commit/hpopp/kurpo-bot.svg)](https://github.com/hpopp/kurpo-bot/commits/main)
 
 # KurpoBot

@@ -89,11 +89,24 @@ defmodule KurpoBot.MainConsumer do
           {:ok, Nostrum.Struct.Message.t()} | Nostrum.Api.error()
   def type_and_send(channel_id, content) do
     3_000 |> :rand.uniform() |> Process.sleep()
+
+    typing_time = round(String.length(content) / 6)
+    sleep_with_typing(channel_id, typing_time)
+
+    Message.create(channel_id, content: content)
+  end
+
+  @spec sleep_with_typing(non_neg_integer(), non_neg_integer()) :: :ok
+  defp sleep_with_typing(_channel_id, remaining_time) when remaining_time <= 0, do: :ok
+
+  defp sleep_with_typing(channel_id, remaining_time) do
     Channel.start_typing(channel_id)
 
-    t = round(String.length(content) / 6)
-    Process.sleep(t * 1000)
-    Message.create(channel_id, content: content)
+    # Use 7 seconds to be safe
+    chunk_time = min(remaining_time, 7)
+    Process.sleep(chunk_time * 1000)
+
+    sleep_with_typing(channel_id, remaining_time - chunk_time)
   end
 
   @spec save_message(Nostrum.Struct.Message.t()) ::
