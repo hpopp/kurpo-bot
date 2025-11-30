@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded to Elixir `1.19.4` / OTP `28.2`.
-- Updated all dependencies.
+- Upgraded to Elixir `1.19.4` / OTP `28.2`. [#24](https://github.com/hpopp/kurpo-bot/pull/24)
+- Updated all dependencies. [#24](https://github.com/hpopp/kurpo-bot/pull/24)
 
 ## [0.6.7] - 2025-07-10
 
