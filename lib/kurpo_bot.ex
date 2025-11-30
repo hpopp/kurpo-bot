@@ -65,7 +65,7 @@ defmodule KurpoBot do
   ## Examples
 
       iex> KurpoBot.version()
-      "0.6.6"
+      "0.6.8"
   """
   @spec version :: String.t()
   def version do
