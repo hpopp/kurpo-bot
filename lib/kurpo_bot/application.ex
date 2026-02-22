@@ -13,6 +13,7 @@ defmodule KurpoBot.Application do
       [
         KurpoBot.Repo,
         KurpoBot.MainConsumer,
+        KurpoBot.ShardWatchdog,
         migrate_database(System.get_env("MIX_ENV")),
         tcp_healthcheck()
       ]
