@@ -1,27 +1,38 @@
 defmodule KurpoBot.ShardWatchdog do
   @moduledoc """
-  Monitors Nostrum shard processes and reconnects them when they've been
-  permanently lost due to exhausted supervisor restart budgets.
+  Reconnects lost Nostrum shards with backoff.
 
-  Nostrum.Shard uses `restart: :transient`, so when the per-shard supervisor
-  reaches its max restart intensity (3 crashes in 60s), the DynamicSupervisor
-  won't restart it. This watchdog detects that condition and re-establishes
-  the connection with exponential backoff.
+  When Discord drops the websocket (e.g. heartbeat ack timeout), Nostrum's
+  `Session` gen_statem transitions to `connecting_http` to re-establish the
+  connection. If the network is temporarily unavailable, each attempt crashes
+  with `connect_http_timeout` after 5 seconds. The per-shard `Nostrum.Shard`
+  supervisor allows 3 restarts in 60 seconds — exhausted in ~17 seconds of
+  rapid retry-crash cycles.
+
+  Critically, `Nostrum.Shard` uses `restart: :transient`, so when the
+  supervisor exits with `{:shutdown, :reached_max_restart_intensity}`, the
+  parent `DynamicSupervisor` treats it as a normal exit and does not restart
+  the shard. The bot is permanently disconnected until the process is
+  restarted externally.
+
+  To fix, we poll `Nostrum.Shard.Supervisor` every 30 seconds. When zero active
+  shards are detected, we attempt to reconnect using Oban-style polynomial backoff
+  (`attempt^4 + 15 + rand(30) * attempt` seconds), capped at `max_attempts`
+  (default 20, ~2 weeks of cumulative wait). After reaching the cap, we continue
+  retrying at the maximum interval indefinitely.
   """
 
   use GenServer
   require Logger
 
-  defstruct consecutive_failures: 0,
-            check_interval: :timer.seconds(30),
-            initial_backoff: :timer.seconds(10),
-            max_backoff: :timer.minutes(5)
+  defstruct check_interval: :timer.seconds(30),
+            consecutive_failures: 0,
+            max_attempts: 20
 
   @type t :: %__MODULE__{
-          consecutive_failures: non_neg_integer(),
           check_interval: pos_integer(),
-          initial_backoff: pos_integer(),
-          max_backoff: pos_integer()
+          consecutive_failures: non_neg_integer(),
+          max_attempts: pos_integer()
         }
 
   @spec start_link(keyword()) :: GenServer.on_start()
@@ -64,18 +75,12 @@ defmodule KurpoBot.ShardWatchdog do
 
   @spec attempt_reconnect(t()) :: t()
   defp attempt_reconnect(state) do
-    backoff =
-      min(
-        state.initial_backoff * Integer.pow(2, state.consecutive_failures),
-        state.max_backoff
-      )
+    attempt = min(state.consecutive_failures + 1, state.max_attempts)
+    backoff = backoff_seconds(attempt)
 
-    Logger.info(
-      "Shard watchdog: backing off #{backoff}ms before reconnect " <>
-        "(attempt #{state.consecutive_failures + 1})"
-    )
+    Logger.info("Shard watchdog: backing off #{backoff}s before reconnect (attempt #{attempt})")
 
-    Process.sleep(backoff)
+    Process.sleep(:timer.seconds(backoff))
 
     {_url, total_shards} = Nostrum.Util.gateway()
 
@@ -86,8 +91,15 @@ defmodule KurpoBot.ShardWatchdog do
 
       {:error, reason} ->
         Logger.error("Shard watchdog: reconnect failed: #{inspect(reason)}")
-        %{state | consecutive_failures: state.consecutive_failures + 1}
+        %{state | consecutive_failures: attempt}
     end
+  end
+
+  # Oban-style polynomial backoff with jitter. Ramps up aggressively:
+  # ~46s at attempt 1, ~13min at attempt 5, ~2.9h at attempt 10, ~1.9d at attempt 20.
+  @spec backoff_seconds(pos_integer()) :: pos_integer()
+  defp backoff_seconds(attempt) do
+    Integer.pow(attempt, 4) + 15 + :rand.uniform(30) * attempt
   end
 
   @spec schedule_check(t()) :: reference()
